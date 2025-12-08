@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Calculadora Mecânica - Underground</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #050608;
+            color: #e5e7eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: radial-gradient(circle at top left, #071409 0, #020308 40%, #000000 100%);
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 255, 64, 0.25);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-box img {
+            height: 64px;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            line-height: 1.1;
+        }
+
+        .brand-main {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #dcdfe3;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.32em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: right;
+            color: #00ff40;
+            text-shadow: 0 0 12px rgba(0, 255, 64, 0.7);
+        }
+
+        .divider {
+            height: 1px;
+            width: 100%;
+            margin: 10px 0 18px;
+            background: linear-gradient(90deg,
+                    transparent 0,
+                    rgba(0, 255, 64, 0.15) 8%,
+                    rgba(0, 255, 64, 0.7) 50%,
+                    rgba(0, 255, 64, 0.15) 92%,
+                    transparent 100%);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.05fr 1.05fr;
+            gap: 22px;
+        }
+
+        .card {
+            background: rgba(7, 11, 9, 0.96);
+            border-radius: 12px;
+            padding: 14px 14px 16px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left,
+                    rgba(0, 255, 64, 0.16),
+                    transparent 58%);
+            pointer-events: none;
+        }
+
+        .card-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            background: rgba(0, 255, 64, 0.08);
+            color: #00ff40;
+            border: 1px solid rgba(0, 255, 64, 0.45);
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #00ff40;
+            box-shadow: 0 0 10px rgba(0, 255, 64, 0.95);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            position: relative;
+            z-index: 1;
+        }
+
+        thead {
+            background: linear-gradient(90deg, #020617, #050b08);
+        }
+
+        th,
+        td {
+            padding: 7px 8px;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+        }
+
+        th {
+            text-align: left;
+            color: #9ca3af;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(15, 23, 42, 0.35);
+        }
+
+        tbody tr:hover {
+            background: rgba(22, 163, 74, 0.16);
+        }
+
+        .checkbox-col {
+            width: 42px;
+            text-align: center;
+        }
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #00ff40;
+        }
+
+        input[type="number"] {
+            width: 72px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(55, 65, 81, 0.9);
+            background: #020617;
+            color: #e5e7eb;
+            font-size: 13px;
+            text-align: right;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #00ff40;
+            box-shadow: 0 0 0 1px rgba(0, 255, 64, 0.4);
+        }
+
+        .price {
+            text-align: right;
+            color: #bbf7d0;
+            font-weight: 600;
+        }
+
+        .total-box {
+            margin-top: 8px;
+            text-align: right;
+            font-size: 13px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .total-label {
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 11px;
+        }
+
+        .total-value {
+            font-weight: 700;
+            color: #00ff40;
+            margin-left: 6px;
+            text-shadow: 0 0 10px rgba(0, 255, 64, 0.7);
+        }
+
+        .summary {
+            margin-top: 20px;
+            padding: 14px 16px 16px;
+            border-radius: 12px;
+            background: radial-gradient(circle at top left,
+                    rgba(0, 255, 64, 0.14),
+                    rgba(2, 6, 23, 0.96));
+            border: 1px solid rgba(0, 255, 64, 0.6);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.9);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 13px;
+        }
+
+        .summary-row label {
+            color: #9ca3af;
+        }
+
+        .summary-row span {
+            font-weight: 600;
+        }
+
+        .summary-row span.value {
+            color: #bbf7d0;
+        }
+
+        .summary-row span.value-strong {
+            color: #00ff40;
+            text-shadow: 0 0 12px rgba(0, 255, 64, 0.9);
+        }
+
+        .summary-row.total {
+            border-top: 1px solid rgba(148, 163, 184, 0.45);
+            margin-top: 6px;
+            padding-top: 8px;
+            font-size: 15px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            h1 {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-box">
+                <img src="underground_sem_fundo.jpg" alt="Underground Performance" />
+                <div class="brand-text">
+                    <div class="brand-main">UNDERGROUND</div>
+                    <div class="brand-sub">Performance</div>
+                </div>
+            </div>
+            <h1>Calculadora de Serviços Mecânicos</h1>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid">
+            <!-- CONSERTOS -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Consertos</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">OK</th>
+                            <th>Serviço</th>
+                            <th>Preço</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-conserto" data-preco="1700" />
+                            </td>
+                            <td>Kit Reparo</td>
+                            <td class="price">R$ 1.700,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-conserto" data-preco="700" />
+                            </td>
+                            <td>1 Pneu</td>
+                            <td class="price">R$ 700,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-conserto" data-preco="1400" />
+                            </td>
+                            <td>2 Pneus</td>
+                            <td class="price">R$ 1.400,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-conserto" data-preco="2100" />
+                            </td>
+                            <td>3 Pneus</td>
+                            <td class="price">R$ 2.100,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-conserto" data-preco="2800" />
+                            </td>
+                            <td>4 Pneus</td>
+                            <td class="price">R$ 2.800,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-conserto" data-preco="1300" />
+                            </td>
+                            <td>Externo</td>
+                            <td class="price">R$ 1.300,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-conserto" data-preco="1800" />
+                            </td>
+                            <td>Externo Norte</td>
+                            <td class="price">R$ 1.800,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="total-box">
+                    <span class="total-label">Total consertos:</span>
+                    <span id="totalConsertos" class="total-value">R$ 0,00</span>
+                </div>
+            </div>
+
+            <!-- ITENS / VENDAS -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Itens / Vendas</div>
+                    <div class="badge">
+                        <span class="badge-dot"></span> 20% Painel
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">OK</th>
+                            <th>Item</th>
+                            <th>Preço</th>
+                            <th>Qtd.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="1700" />
+                            </td>
+                            <td>Reparo 2.0 (Motor e Lataria)</td>
+                            <td class="price">R$ 1.700,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="900" />
+                            </td>
+                            <td>Kit Reparo</td>
+                            <td class="price">R$ 900,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="700" />
+                            </td>
+                            <td>Pneu</td>
+                            <td class="price">R$ 700,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="500" />
+                            </td>
+                            <td>Chave Inglesa</td>
+                            <td class="price">R$ 500,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="1350" />
+                            </td>
+                            <td>Elevador Hidráulico</td>
+                            <td class="price">R$ 1.350,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="950" />
+                            </td>
+                            <td>Kit Drift</td>
+                            <td class="price">R$ 950,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="5000" />
+                            </td>
+                            <td>Nitro</td>
+                            <td class="price">R$ 5.000,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="15000" />
+                            </td>
+                            <td>Rastreador</td>
+                            <td class="price">R$ 15.000,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="chk-item" data-preco="10000" />
+                            </td>
+                            <td>Combo MEC</td>
+                            <td class="price">R$ 10.000,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="total-box">
+                    <span class="total-label">Total itens:</span>
+                    <span id="totalItens" class="total-value">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-row">
+                <label>Total Consertos</label>
+                <span class="value" id="resConsertos">R$ 0,00</span>
+            </div>
+            <div class="summary-row">
+                <label>Total Vendas</label>
+                <span class="value" id="resItens">R$ 0,00</span>
+            </div>
+            <div class="summary-row">
+                <label>Taxa Painel (20% sobre vendas)</label>
+                <span class="value" id="resTaxa">R$ 0,00</span>
+            </div>
+            <div class="summary-row total">
+                <label>Valor Total do Conserto + Vendas</label>
+                <span class="value-strong" id="resTotal">R$ 0,00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatBRL(v) {
+            return v.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+            });
+        }
+
+        function recalcular() {
+            // Consertos
+            let totalConsertos = 0;
+            document.querySelectorAll(".chk-conserto").forEach((chk) => {
+                if (chk.checked) {
+                    const preco = parseFloat(chk.dataset.preco) || 0;
+                    totalConsertos += preco;
+                }
+            });
+
+            // Itens / Vendas
+            let totalItens = 0;
+            const chkItens = document.querySelectorAll(".chk-item");
+			const qtdItens = document.querySelectorAll(".qtd-item");
+
+        chkItens.forEach((chk, idx) => {
+            if (chk.checked) {
+                const preco = parseFloat(chk.dataset.preco) || 0;
+                const qtd = parseInt(qtdItens[idx].value) || 0;
+                totalItens += preco * qtd;
+            }
+        });
+
+        // Taxa 20% sobre vendas
+        const taxa = totalItens * 0.20;
+
+        // Total geral
+        const totalGeral = totalConsertos + totalItens + taxa;
+
+        // Atualiza UI
+        document.getElementById("totalConsertos").textContent = formatBRL(totalConsertos);
+        document.getElementById("totalItens").textContent = formatBRL(totalItens);
+        document.getElementById("resConsertos").textContent = formatBRL(totalConsertos);
+        document.getElementById("resItens").textContent = formatBRL(totalItens);
+        document.getElementById("resTaxa").textContent = formatBRL(taxa);
+        document.getElementById("resTotal").textContent = formatBRL(totalGeral);
+    }
+
+    // Eventos de consertos
+    document.querySelectorAll(".chk-conserto").forEach((el) => {
+        el.addEventListener("change", recalcular);
+    });
+
+    // Eventos de itens / vendas (checkbox altera quantidade)
+    const chkItens = document.querySelectorAll(".chk-item");
+    const qtdItens = document.querySelectorAll(".qtd-item");
+
+    chkItens.forEach((chk, idx) => {
+        chk.addEventListener("change", () => {
+            const input = qtdItens[idx];
+            if (chk.checked) {
+                const qtdAtual = parseInt(input.value) || 0;
+                if (qtdAtual <= 0) input.value = 1;
+            } else {
+                input.value = 0;
+            }
+            recalcular();
+        });
+    });
+
+    // Digitar quantidade marca/desmarca checkbox
+    qtdItens.forEach((input, idx) => {
+        input.addEventListener("input", () => {
+            const qtd = parseInt(input.value) || 0;
+            const chk = chkItens[idx];
+            chk.checked = qtd > 0;
+            recalcular();
+        });
+    });
+
+    // Cálculo inicial
+    recalcular();
+</script>
