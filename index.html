@@ -542,11 +542,11 @@
             }
         });
 
+        const totalGeral = totalConsertos + totalItens;
+
         // Taxa 20% sobre vendas
         const taxa = totalItens * 0.20;
 
-        // Total geral
-        const totalGeral = totalConsertos + totalItens + taxa;
 
         // Atualiza UI
         document.getElementById("totalConsertos").textContent = formatBRL(totalConsertos);
